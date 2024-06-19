@@ -12,10 +12,14 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - run: echo "cache"
       - name: Cache
         uses: actions/cache@v4.0.2
-            
+        with:
+          # A list of files, directories, and wildcard patterns to cache and restore
+          path: Library
+          # An explicit key for restoring and saving the cache
+          key: ${{ runner.os }}
+        
       - run: echo "test"
       - name: Unity - Test runner
         uses: game-ci/unity-test-runner@v4.3.0
