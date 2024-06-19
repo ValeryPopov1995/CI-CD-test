@@ -1,0 +1,24 @@
+name: GameCI learning
+on:
+  workflow_dispatch:
+
+jobs:
+  my_job:
+    name: deploy to staging
+    runs-on: ubuntu-latest
+    steps:
+      - run: echo "build"
+      - name: Unity - Builder
+        uses: game-ci/unity-builder@v4.2.3
+        env:
+          UNITY_LICENSE: ${{ secrets.UNITY_LICENSE }}
+          UNITY_EMAIL: ${{ secrets.UNITY_EMAIL }}
+          UNITY_PASSWORD: ${{ secrets.UNITY_PASSWORD }}
+
+      - run: echo "upload build"
+      - name: Unity - Load
+        uses: actions/upload-artifact@v3
+        with:
+          name: Build
+          path: build
+            
