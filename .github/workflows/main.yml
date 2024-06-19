@@ -14,8 +14,8 @@ jobs:
 
       - run: echo "cache"
       - name: Cache
-        uses: actions/cache@v4
-
+        uses: actions/cache@v4.0.2
+            
       - run: echo "test"
       - name: Unity - Test runner
         uses: game-ci/unity-test-runner@v4.3.0
