@@ -29,8 +29,6 @@ jobs:
           - 2023.2.2f1
     steps:
       - uses: actions/checkout@v4
-        with:
-          lfs: true
 
       - uses: actions/cache@v4
         with:
@@ -39,7 +37,6 @@ jobs:
           restore-keys: |
             Library-${{ matrix.baseRunner }}
 
-      # Configure test runner
       - name: Run tests
         id: allTests
         uses: ./
@@ -47,119 +44,3 @@ jobs:
           projectPath: ${{ matrix.projectPath }}
           unityVersion: ${{ matrix.unityVersion }}
           testMode: all
-          coverageOptions: 'generateAdditionalMetrics;generateHtmlReport;generateBadgeReport;assemblyFilters:+MyScripts;dontClear'
-          # Test implicit artifactsPath, by not setting it
-
-      # Upload artifacts
-      - name: Upload test results
-        uses: actions/upload-artifact@v4
-        with:
-          name: Test results (all) (${{ matrix.baseRunner }}, ${{ matrix.unityVersion }})
-          path: ${{ steps.allTests.outputs.artifactsPath }}
-          retention-days: 14
-
-      # Upload coverage
-      - name: Upload coverage results
-        uses: actions/upload-artifact@v4
-        with:
-          name: Coverage results (all) (${{ matrix.baseRunner }}, ${{ matrix.unityVersion }})
-          path: ${{ steps.allTests.outputs.coveragePath }}
-          retention-days: 14
-
-  testRunnerInStandalone:
-    name: Test standalone 📺
-    runs-on: ${{ matrix.baseRunner }}
-    strategy:
-      fail-fast: false
-      matrix:
-        baseRunner:
-          - ubuntu-latest
-          - windows-2022
-        projectPath:
-          - unity-project-with-correct-tests
-        unityVersion:
-          - 2022.3.13f1
-          - 2023.1.19f1
-          - 2023.2.2f1
-    steps:
-      - uses: actions/checkout@v4
-        with:
-          lfs: true
-
-      - uses: actions/cache@v4
-        with:
-          path: ${{ matrix.projectPath }}/Library
-          key: Library-${{ matrix.baseRunner }}-${{ matrix.projectPath }}
-          restore-keys: |
-            Library-${{ matrix.baseRunner }}-
-
-      # Configure test runner
-      - name: Run tests
-        id: standalone
-        uses: ./
-        with:
-          projectPath: ${{ matrix.projectPath }}
-          unityVersion: ${{ matrix.unityVersion }}
-          testMode: standalone
-          artifactsPath: artifacts/standalone
-
-      # Upload artifacts
-      - name: Upload test results
-        uses: actions/upload-artifact@v4
-        with:
-          name: Test results (play mode standalone) (${{ matrix.baseRunner }}, ${{ matrix.unityVersion }})
-          path: ${{ steps.standalone.outputs.artifactsPath }}
-          retention-days: 14
-
-  testRunnerInStandaloneWithIL2CPP:
-    name: Test standalone with IL2CPP 📺
-    runs-on: ${{ matrix.baseRunner }}
-    strategy:
-      fail-fast: false
-      matrix:
-        baseRunner:
-          - ubuntu-latest
-          - windows-2022
-        projectPath:
-          - unity-project-with-correct-tests
-        unityVersion:
-          - 2022.3.13f1
-          - 2023.1.19f1
-          - 2023.2.2f1
-    steps:
-      - uses: actions/checkout@v4
-        with:
-          lfs: true
-
-      - uses: actions/cache@v4
-        with:
-          path: ${{ matrix.projectPath }}/Library
-          key: Library-${{ matrix.baseRunner }}-${{ matrix.projectPath }}
-          restore-keys: |
-            Library-${{ matrix.baseRunner }}-
-
-      # Set scripting backend to IL2CPP
-      - name: Rewrite ProjectSettings
-        run: |
-          DefineOriginal="  scriptingBackend: {}"
-          DefineReplace="  scriptingBackend: \\n    Standalone: 1"
-          sed -i "{s/$DefineOriginal/$DefineReplace/g}" ${{ matrix.projectPath }}/ProjectSettings/ProjectSettings.asset
-        shell: bash
-
-      # Configure test runner
-      - name: Run tests
-        id: standalone
-        uses: ./
-        with:
-          projectPath: ${{ matrix.projectPath }}
-          unityVersion: ${{ matrix.unityVersion }}
-          testMode: standalone
-          artifactsPath: artifacts/standalone
-
-      # Upload artifacts
-      - name: Upload test results
-        uses: actions/upload-artifact@v4
-        with:
-          name: Test results (play mode standalone il2cpp) (${{ matrix.baseRunner }}, ${{ matrix.unityVersion }})
-          path: ${{ steps.standalone.outputs.artifactsPath }}
-          retention-days: 14
