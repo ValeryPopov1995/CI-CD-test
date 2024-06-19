@@ -1,4 +1,4 @@
-name: GameCI learning
+name: GameCI build
 on:
   workflow_dispatch:
 
