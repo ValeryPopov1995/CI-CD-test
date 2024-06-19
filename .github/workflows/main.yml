@@ -8,14 +8,6 @@ jobs:
     runs-on: ubuntu-latest
     steps:
 
-      - run: echo "activate license"
-      - name: Unity - Activate
-        uses: game-ci/unity-activate@v2.0.0
-
-      - run: echo "return license"
-      - name: Unity - Return License
-        uses: game-ci/unity-return-license@v2.0.0
-
       - run: echo "checkout"
       - name: Checkout
         uses: actions/checkout@v4
