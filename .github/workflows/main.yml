@@ -22,6 +22,10 @@ jobs:
         
       - run: echo "test"
       - name: Unity - Test runner
+        env:
+          UNITY_LICENSE: ${{ secrets.UNITY_LICENSE }}
+          UNITY_EMAIL: ${{ secrets.UNITY_EMAIL }}
+          UNITY_PASSWORD: ${{ secrets.UNITY_PASSWORD }}
         uses: game-ci/unity-test-runner@v4.3.0
 
       - run: echo "build"
