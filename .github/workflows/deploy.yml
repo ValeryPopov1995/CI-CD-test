@@ -25,7 +25,7 @@ jobs:
           fetch-depth: 0
           lfs: true
           
-      - uses: actions/cache@v3
+      - uses: actions/cache@v4
         with:
           path: Library
           key: Library-${{ env.TARGET_PLATFORM }}
@@ -37,7 +37,7 @@ jobs:
           targetPlatform: ${{ env.TARGET_PLATFORM }}
           versioning: Semantic
           
-      - uses: actions/upload-artifact@v3
+      - uses: actions/upload-artifact@v4
         with:
           name: Build-${{ env.TARGET_PLATFORM }}
           path: build/
