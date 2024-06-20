@@ -51,7 +51,7 @@ jobs:
           
       - uses: KikimoraGames/itch-publish@v0.0.3
         with:
-          butlerApiKey: ${{ matrix.ITCH_API_KEY }}
+          butlerApiKey: ${{ env.ITCH_API_KEY }}
           gameData: build/Build-${{ matrix.targetPlatform }}
           itchUsername: ${{ env.ITCH_USERNAME }}
           itchGameId: ${{ env.ITCH_GAME_ID }}
