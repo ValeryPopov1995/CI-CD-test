@@ -3,6 +3,7 @@ Test repo for CI/CD learning.
 
 [![GameCI test runner](https://github.com/ValeryPopov1995/CI-CD-test/actions/workflows/main.yml/badge.svg)](https://github.com/ValeryPopov1995/CI-CD-test/actions/workflows/main.yml)
 [![GameCI build](https://github.com/ValeryPopov1995/CI-CD-test/actions/workflows/build.yml/badge.svg)](https://github.com/ValeryPopov1995/CI-CD-test/actions/workflows/build.yml)
+[![Deploy](https://github.com/ValeryPopov1995/CI-CD-test/actions/workflows/deploy.yml/badge.svg)](https://github.com/ValeryPopov1995/CI-CD-test/actions/workflows/deploy.yml)
 
 ## Used tools
 - Unity license getted from file (personal license)
@@ -14,4 +15,4 @@ Test repo for CI/CD learning.
 - [GameCI](https://game.ci/)
   - Test runner (runtime/editor)
   - Builder
-  - ~~deployment~~ (no published game)
+  - deployment on itch io
