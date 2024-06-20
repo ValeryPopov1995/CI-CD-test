@@ -41,11 +41,6 @@ jobs:
         with:
           name: Build-${{ env.TARGET_PLATFORM }}
           path: build/
-
-      - uses: actions/download-artifact@v4
-        with:
-          name: Build-${{ env.TARGET_PLATFORM }}
-          path: build/Build-${{ env.TARGET_PLATFORM }}
           
       - uses: KikimoraGames/itch-publish@v0.0.3
         with:
