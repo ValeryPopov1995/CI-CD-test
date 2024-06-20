@@ -5,6 +5,7 @@ env:
   UNITY_LICENSE: ${{ secrets.UNITY_LICENSE }}
   UNITY_EMAIL: ${{ secrets.UNITY_EMAIL }}
   UNITY_PASSWORD: ${{ secrets.UNITY_PASSWORD }}
+  ITCH_API_KEY: ${{ secrets.ITCH_API_KEY }}
   ITCH_USERNAME: valerypopov
   ITCH_GAME_ID: ci-cd-test
   
@@ -17,7 +18,7 @@ jobs:
       matrix:
         targetPlatform:
           - StandaloneWindows64
-          - StandaloneLinux64
+          #- StandaloneLinux64
     outputs:
       buildVersion: ${{ steps.buildStep.outputs.buildVersion }}
     steps:
@@ -46,17 +47,12 @@ jobs:
       - uses: actions/upload-artifact@v3
         with:
           name: Build-${{ matrix.targetPlatform }}
-          path: build/${{ matrix.targetPlatform }}
-          
-      - uses: actions/download-artifact@v2.0.8
-        with:
-          name: Build-${{ matrix.targetPlatform }}
-          path: build/${{ matrix.targetPlatform }}
+          path: build
           
       - uses: KikimoraGames/itch-publish@v0.0.3
         with:
-          butlerApiKey: ${{secrets.ITCH_API_KEY}}
-          gameData: ./build/Build-${{ matrix.targetPlatform }}
-          itchUsername: ${{env.ITCH_USERNAME}}
+          butlerApiKey: ${{ matrix.ITCH_API_KEY }}
+          gameData: build/Build-${{ matrix.targetPlatform }}
+          itchUsername: ${{ env.ITCH_USERNAME }}
           itchGameId: ${{ env.ITCH_GAME_ID }}
           buildChannel: ${{ matrix.targetPlatform }}
