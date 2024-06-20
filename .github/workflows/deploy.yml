@@ -39,20 +39,10 @@ jobs:
           buildName: Build-${{ env.TARGET_PLATFORM }}
           buildPath: build/
           
-      - uses: actions/upload-artifact@v4
+      - name: Upload to itch.io
+        uses: robpc/itchio-upload-action@v1
         with:
-          name: Build-${{ env.TARGET_PLATFORM }}
-          path: build/
-          
-      - uses: actions/download-artifact@v4
-        with:
-          name: Build-${{ env.TARGET_PLATFORM }}
-          path: build/Build-${{ env.TARGET_PLATFORM }}
-          
-      - uses: KikimoraGames/itch-publish@v0.0.3
-        with:
-          butlerApiKey: ${{ env.ITCH_API_KEY }}
-          gameData: build/Build-${{ env.TARGET_PLATFORM }}
-          itchUsername: ${{ env.ITCH_USERNAME }}
-          itchGameId: ${{ env.ITCH_GAME_ID }}
-          buildChannel: ${{ env.BUILD_CHANNEL }}
+          path: build/${{ env.TARGET_PLATFORM }}
+          project: valerypopov/ci-cd-test
+          channel: windows
+          api-key: ${{ secrets.ITCH_API_KEY }}
