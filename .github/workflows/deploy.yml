@@ -10,7 +10,9 @@ env:
   ITCH_GAME_ID: ci-cd-test
   TARGET_PLATFORM: StandaloneWindows64
   BUILD_CHANNEL: windows
-  
+
+permissions: write-all
+
 jobs:
   build:
     runs-on: ubuntu-latest
