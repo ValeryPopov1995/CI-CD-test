@@ -1,0 +1,61 @@
+name: Deploy
+on:
+  workflow_dispatch
+env:
+  ITCH_USERNAME: valerypopov
+  ITCH_GAME_ID: ci-cd-test
+  
+jobs:
+  build:
+    name: Build for ${{ matrix.targetPlatform }}
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        targetPlatform:
+          - StandaloneWindows64
+          - StandaloneLinux64
+    outputs:
+      buildVersion: ${{ steps.buildStep.outputs.buildVersion }}
+    steps:
+    
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          lfs: true
+          
+      - uses: actions/cache@v3
+        with:
+          path: Library
+          key:
+            Library-${{ matrix.targetPlatform }}-${{ hashFiles('Assets/**', 'Packages/**',
+            'ProjectSettings/**') }}
+          restore-keys: |
+            Library-${{ matrix.targetPlatform }}-
+            Library-
+            
+      - uses: game-ci/unity-builder@v4
+        id: buildStep
+        env:
+          UNITY_LICENSE: ${{ secrets.UNITY_LICENSE }}
+        with:
+          targetPlatform: ${{ matrix.targetPlatform }}
+          versioning: Semantic
+          
+      - uses: actions/upload-artifact@v3
+        with:
+          name: Build-${{ matrix.targetPlatform }}
+          path: build/${{ matrix.targetPlatform }}
+          
+      - uses: actions/download-artifact@v2.0.8
+        with:
+          name: ${{ matrix.targetPlatform }}
+          path: build/${{ matrix.targetPlatform }}
+          
+      - uses: KikimoraGames/itch-publish@v0.0.3
+        with:
+          butlerApiKey: ${{secrets.ITCH_API_KEY}}
+          gameData: ./build/${{ matrix.targetPlatform }}
+          itchUsername: ${{env.ITCH_USERNAME}}
+          itchGameId: ${{ env.ITCH_GAME_ID }}
+          buildChannel: ${{ matrix.targetPlatform }}
