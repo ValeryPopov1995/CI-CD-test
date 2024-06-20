@@ -6,19 +6,18 @@ env:
   UNITY_EMAIL: ${{ secrets.UNITY_EMAIL }}
   UNITY_PASSWORD: ${{ secrets.UNITY_PASSWORD }}
   ITCH_API_KEY: ${{ secrets.ITCH_API_KEY }}
-  ITCH_USERNAME: valerypopov
-  ITCH_GAME_ID: ci-cd-test
+  
+  itch_username: valerypopov
+  itch_game_id: ci-cd-test
+  targetPlatform: StandaloneWindows64
+  buildChannel: windows
   
 jobs:
   build:
-    name: Build for ${{ matrix.targetPlatform }}
+    name: Build for ${{ env.targetPlatform }}
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
-      matrix:
-        targetPlatform:
-          - StandaloneWindows64
-          #- StandaloneLinux64
     outputs:
       buildVersion: ${{ steps.buildStep.outputs.buildVersion }}
     steps:
@@ -31,24 +30,29 @@ jobs:
       - uses: actions/cache@v3
         with:
           path: Library
-          key: Library-${{ matrix.targetPlatform }}
+          key: Library-${{ env.targetPlatform }}
           restore-keys: Library-
             
       - uses: game-ci/unity-builder@v4
         id: buildStep
         with:
-          targetPlatform: ${{ matrix.targetPlatform }}
+          targetPlatform: ${{ env.targetPlatform }}
           versioning: Semantic
           
       - uses: actions/upload-artifact@v3
         with:
-          name: Build-${{ matrix.targetPlatform }}
-          path: build
+          name: Build-${{ env.targetPlatform }}
+          path: build/Build-${{ env.targetPlatform }}
+
+      - uses: actions/download-artifact@v4
+        with:
+          name: ${{ env.targetPlatform }}
+          path: build/${{ env.targetPlatform }}
           
       - uses: KikimoraGames/itch-publish@v0.0.3
         with:
           butlerApiKey: ${{ env.ITCH_API_KEY }}
-          gameData: build/Build-${{ matrix.targetPlatform }}
-          itchUsername: ${{ env.ITCH_USERNAME }}
-          itchGameId: ${{ env.ITCH_GAME_ID }}
-          buildChannel: ${{ matrix.targetPlatform }}
+          gameData: ./build/${{ env.targetPlatform }}
+          itchUsername: ${{ env.itch_username }}
+          itchGameId: ${{ env.itch_game_id }}
+          buildChannel: ${{ env.buildChannel }}
