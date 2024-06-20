@@ -6,14 +6,14 @@ env:
   UNITY_EMAIL: ${{ secrets.UNITY_EMAIL }}
   UNITY_PASSWORD: ${{ secrets.UNITY_PASSWORD }}
   ITCH_API_KEY: ${{ secrets.ITCH_API_KEY }}
-  itch_username: valerypopov
-  itch_game_id: ci-cd-test
-  targetPlatform: StandaloneWindows64
-  buildChannel: windows
+  ITCH_USERNAME: valerypopov
+  ITCH_GAME_ID: ci-cd-test
+  TARGET_PLATFORM: StandaloneWindows64
+  BUILD_CHANNEL: windows
   
 jobs:
   build:
-    name: Build for ${{ env.targetPlatform }}
+    name: Build for ${{ env.TARGET_PLATFORM }}
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
@@ -29,29 +29,29 @@ jobs:
       - uses: actions/cache@v3
         with:
           path: Library
-          key: Library-${{ env.targetPlatform }}
+          key: Library-${{ env.TARGET_PLATFORM }}
           restore-keys: Library-
             
       - uses: game-ci/unity-builder@v4
         id: buildStep
         with:
-          targetPlatform: ${{ env.targetPlatform }}
+          targetPlatform: ${{ env.TARGET_PLATFORM }}
           versioning: Semantic
           
       - uses: actions/upload-artifact@v3
         with:
-          name: Build-${{ env.targetPlatform }}
-          path: build/Build-${{ env.targetPlatform }}
+          name: Build-${{ env.TARGET_PLATFORM }}
+          path: build/Build-${{ env.TARGET_PLATFORM }}
 
       - uses: actions/download-artifact@v4
         with:
-          name: ${{ env.targetPlatform }}
-          path: build/${{ env.targetPlatform }}
+          name: ${{ env.TARGET_PLATFORM }}
+          path: build/${{ env.TARGET_PLATFORM }}
           
       - uses: KikimoraGames/itch-publish@v0.0.3
         with:
           butlerApiKey: ${{ env.ITCH_API_KEY }}
-          gameData: ./build/${{ env.targetPlatform }}
-          itchUsername: ${{ env.itch_username }}
-          itchGameId: ${{ env.itch_game_id }}
-          buildChannel: ${{ env.buildChannel }}
+          gameData: ./build/${{ env.TARGET_PLATFORM }}
+          itchUsername: ${{ env.ITCH_USERNAME }}
+          itchGameId: ${{ env.ITCH_GAME_ID }}
+          buildChannel: ${{ env.BUILD_CHANNEL }}
