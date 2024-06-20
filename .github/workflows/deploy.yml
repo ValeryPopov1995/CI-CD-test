@@ -13,7 +13,6 @@ env:
   
 jobs:
   build:
-    name: Build for ${{ env.TARGET_PLATFORM }}
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
