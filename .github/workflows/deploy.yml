@@ -50,13 +50,13 @@ jobs:
           
       - uses: actions/download-artifact@v2.0.8
         with:
-          name: ${{ matrix.targetPlatform }}
+          name: Build-${{ matrix.targetPlatform }}
           path: build/${{ matrix.targetPlatform }}
           
       - uses: KikimoraGames/itch-publish@v0.0.3
         with:
           butlerApiKey: ${{secrets.ITCH_API_KEY}}
-          gameData: ./build/${{ matrix.targetPlatform }}
+          gameData: ./build/Build-${{ matrix.targetPlatform }}
           itchUsername: ${{env.ITCH_USERNAME}}
           itchGameId: ${{ env.ITCH_GAME_ID }}
           buildChannel: ${{ matrix.targetPlatform }}
