@@ -15,4 +15,4 @@ Test repo for CI/CD learning.
 - [GameCI](https://game.ci/)
   - Test runner (runtime/editor)
   - Builder
-  - deployment on itch io
+- [Butler](https://itch.io/docs/butler/) to deploy on itch io
